@@ -1,9 +1,7 @@
 import os
-
-from flask import Flask
+from flask import Flask, render_template
 
 def create_app():
-    # Create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='secret'
@@ -15,5 +13,9 @@ def create_app():
         os.makedirs(app.instance_path)
     except OSError:
         pass
+
+    @app.route('/')
+    def home():
+        return render_template('home.html')
 
     return app
