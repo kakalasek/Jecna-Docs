@@ -7,5 +7,5 @@ def handle_connect():
 
 @socketio.on('docs_change')
 def handle_docs_change(text):
-    print(f"Docs text has changed: {text}")
+    emit("docs_update", {"new_docs": text}, broadcast=True)
     
