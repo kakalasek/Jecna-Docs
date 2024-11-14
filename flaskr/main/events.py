@@ -4,7 +4,6 @@ from flask_socketio import send, emit
 @socketio.on('connect')
 def handle_connect():
     print('Client connected!')
-    emit("connect", broadcast=True)
 
 @socketio.on('docs_change')
 def handle_docs_change(text):
