@@ -1,8 +1,11 @@
 from .. import socketio
-from flask_socketio import send
+from flask_socketio import send, emit
 
-@socketio.on('message')
-def handleMessage(msg):
-    print('Message: ' + msg)
-    send(msg, broadcast=True)
+@socketio.on('connect')
+def handle_connect():
+    print('Client connected!')
+
+@socketio.on('docs_change')
+def handle_docs_change(text):
+    print(f"Docs text has changed: {text}")
     
