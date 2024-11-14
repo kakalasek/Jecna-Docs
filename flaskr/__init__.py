@@ -1,12 +1,14 @@
+from flask import Flask
 import os
-from flask import Flask, render_template
+from flask_socketio import SocketIO
+
+socketio = SocketIO()
 
 def create_app():
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__)
     app.config.from_mapping(
         SECRET_KEY='secret'
     )
-        
     app.config.from_pyfile('config.py', silent=True)
 
     try:
@@ -14,8 +16,8 @@ def create_app():
     except OSError:
         pass
 
-    @app.route('/')
-    def home():
-        return render_template('home.html')
+    from .main import main_page
+    app.register_blueprint(main_page)
 
-    return app
+    socketio.init_app(app)
+    return (app, socketio)
