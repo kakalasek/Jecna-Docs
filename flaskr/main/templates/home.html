@@ -34,14 +34,28 @@
 
             socket.on('update_user_list', function(data){
                 user_list_dom.innerHTML = ''
-                user_list = data['user_list']
+                let user_list = data['user_list']
                 for(i = 0; i < user_list.length; i++){
-                    user_id = document.createElement("div")
+                    let user_id = document.createElement("div")
                     user_id.innerText = user_list[i]
                     user_list_dom.appendChild(user_id)
                 } 
             })
-            
+
+            socket.on('connect_error', function(){
+                let server_status_element = document.querySelector("#server-status")
+                server_status_element.style.color = 'red'
+                server_status_element.innerText = "DOWN" 
+                docs.style.display = "none"
+            })
+
+            socket.on('connect', function(){
+                let server_status_element = document.querySelector("#server-status")
+                server_status_element.style.color = 'green'
+                server_status_element.innerText = "UP"
+                docs.style.display = "block"
+            })
+
            /* 
             window.addEventListener("mousemove", (event) => {
                 let x = event.clientX;
@@ -63,6 +77,7 @@
 
 {% block content %}
 
+    <div id="server-status"></div>
     <textarea id="docs"></textarea>
     <div><h4>List of currently connected users:</h4></div>
     <div id="user-list"></div>
