@@ -22,6 +22,7 @@
     <script type="text/javascript" charset="utf-8">
             const socket = io();
             const docs = document.querySelector("#docs");
+            const user_list_dom = document.querySelector('#user-list')
 
             docs.addEventListener("input", (event) => {
                 socket.emit("docs_change", docs.value)
@@ -31,6 +32,16 @@
                 docs.value = data["new_docs"]
             })
 
+            socket.on('update_user_list', function(data){
+                user_list_dom.innerHTML = ''
+                user_list = data['user_list']
+                for(i = 0; i < user_list.length; i++){
+                    user_id = document.createElement("div")
+                    user_id.innerText = user_list[i]
+                    user_list_dom.appendChild(user_id)
+                } 
+            })
+            
            /* 
             window.addEventListener("mousemove", (event) => {
                 let x = event.clientX;
@@ -53,7 +64,6 @@
 {% block content %}
 
     <textarea id="docs"></textarea>
-    <ul>
-    </ul>
-
+    <div><h4>List of currently connected users:</h4></div>
+    <div id="user-list"></div>
 {% endblock %}
