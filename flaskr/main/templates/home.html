@@ -10,6 +10,7 @@
 
         .cursor{
             position: absolute;
+            background-color: aqua;
             width: 10px;
             height: 10px;
             border-radius: 5px;
@@ -23,6 +24,7 @@
             const socket = io();
             const docs = document.querySelector("#docs");
             const user_list_dom = document.querySelector('#user-list')
+            const cursors = document.querySelector('#cursors')
 
             docs.addEventListener("input", (event) => {
                 socket.emit("docs_change", docs.value)
@@ -42,6 +44,18 @@
                 } 
             })
 
+            socket.on('update_cursor_list', function(data){
+                cursors.innerHTML = ''
+                let cursor_list = data["cursor_list"]
+                for(i = 0; i < cursor_list.length; i++){
+                    let cursor = document.createElement("div")
+                    cursor.classList.add('cursor')
+                    cursor.style.left = cursor_list[i]['x'] + "px"
+                    cursor.style.top = cursor_list[i]['y'] + "px"
+                    cursors.appendChild(cursor)
+                }
+            })
+
             socket.on('connect_error', function(){
                 let server_status_element = document.querySelector("#server-status")
                 server_status_element.style.color = 'red'
@@ -56,7 +70,7 @@
                 docs.style.display = "block"
             })
 
-           /* 
+           
             window.addEventListener("mousemove", (event) => {
                 let x = event.clientX;
                 let y = event.clientY;
@@ -65,13 +79,6 @@
                 socket.emit("draw_cursor", coords)
             })
 
-            socket.on("draw_cursor", function(data){
-                let cursor = document.getElementById('cursor')
-                console.log(data['x'] + "px")
-                cursor.style.left = data['x'] + "px"
-                cursor.style.top = data['y'] + "px"
-            })
-                */
     </script>
 {% endblock %}
 
@@ -81,4 +88,6 @@
     <textarea id="docs"></textarea>
     <div><h4>List of currently connected users:</h4></div>
     <div id="user-list"></div>
+    <div id="cursors"></div>
+
 {% endblock %}
